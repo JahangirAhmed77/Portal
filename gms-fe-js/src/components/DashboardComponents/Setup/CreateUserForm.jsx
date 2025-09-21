@@ -4,7 +4,7 @@ import { userRequest } from '@/lib/RequestMethods';
 import React, { useEffect, useState } from 'react';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
-import toast from 'react-hot-toast';        
+import toast from 'react-hot-toast';
 import axios from 'axios';
 
 // Validation Schema
@@ -247,6 +247,12 @@ const CreateUserForm = () => {
                                             } text-gray-700`}
                                     >
                                         <option value="">Select</option>
+                                        <option value=''>Manager</option>
+                                        <option value=''>Supervisor</option>
+                                        <option value=''>Staff</option>
+                                        <option value=''>Client</option>
+                                        <option value=''>User </option>
+
                                         {roles?.map((role) => (
                                             (role.roleName !== 'superAdmin' && role.roleName !== 'organizationAdmin' && role.roleName !== 'client') && (
                                                 <option key={role.id} value={role.id}>

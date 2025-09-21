@@ -96,7 +96,7 @@ const Login = () => {
 
         // Make API call
         try {
-            const res = await publicRequest.post('/auth/login', formData);
+            const res = await publicRequest.post('/auth/login', formData, { headers: { 'Content-Type': 'application/json' } });
 
 
 
