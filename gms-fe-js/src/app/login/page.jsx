@@ -105,21 +105,30 @@ const Login = () => {
                 // Store token
                 localStorage.setItem("token", res.data.data.token);
 
-                // Store user data as JSON string
-                // localStorage.setItem("user", JSON.stringify(res.data.data));
-
-                dispatch(loginSuccess(res.data))
+                // Get user data from the response
+                const userData = res.data.data.user;  // Get the user object from response
+                console.log('Full user data:', userData); 
+                
+                localStorage.setItem("user", JSON.stringify(userData));
+                dispatch(loginSuccess(res.data));
 
                 // Set session persistence based on checkbox
                 if (keepSignedIn) {
-                    // Optionally set a longer expiration or use sessionStorage
                     localStorage.setItem("keepSignedIn", "true");
                 }
 
-
-
-
-                router.push('/dashboard');
+                // Check user role from the user data
+                const userRole = userData.roleName;  // Role is directly in userData.roleName
+                console.log('User Role:', userRole);
+                
+                if (userRole === 'superAdmin') {
+                    console.log('Redirecting to super admin dashboard');
+                    router.push('/super-admin/dashboard');
+                } else {
+                    console.log('Redirecting to regular dashboard');
+                    router.push('/dashboard');
+                }
+                
                 toast.success('Login successful!');
             } else {
                 // Handle unexpected response structure
