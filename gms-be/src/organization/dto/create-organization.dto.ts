@@ -1,10 +1,20 @@
-import { IsString, IsNotEmpty, IsOptional, IsEmail, MinLength } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  IsOptional,
+  IsEmail,
+  MinLength,
+} from 'class-validator';
 import { CreateOfficeDto } from './create-office-dto';
 
 export class CreateOrganizationDto {
   @IsString()
+  @IsOptional()
+  organizationId?: string; // service uses dto.organizationId
+
+  @IsString()
   @IsNotEmpty()
-  organizationName: string;
+  name: string; // service expects "name"
 
   @IsString()
   @IsOptional()
@@ -20,7 +30,7 @@ export class CreateOrganizationDto {
 
   @IsString()
   @IsNotEmpty()
-  phoneNumber1: string;
+  phoneNumber: string; // service expects "phoneNumber"
 
   @IsString()
   @IsOptional()
@@ -28,7 +38,7 @@ export class CreateOrganizationDto {
 
   @IsString()
   @IsNotEmpty()
-  addressLine1: string;
+  address: string; // service expects "address"
 
   @IsString()
   @IsOptional()

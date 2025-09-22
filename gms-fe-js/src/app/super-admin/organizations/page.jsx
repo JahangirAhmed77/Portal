@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react';
-import { privateRequest } from '@/lib/RequestMethods';
+import { userRequest } from '@/lib/RequestMethods';
 import SuperAdminSidebar from '@/components/DashboardComponents/Sidebar/SuperAdminSidebar';
 import { Search, Filter, MapPin, Phone, Mail, Eye, Trash2, Building2 } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -19,7 +19,7 @@ const OrganizationsListPage = () => {
     const handleDelete = async (id) => {
         if (window.confirm('Are you sure you want to delete this organization?')) {
             try {
-                await privateRequest.delete(`/organizations/${id}`);
+                await userRequest.delete(`/organizations/${id}`);
                 setOrganizations(organizations.filter(org => org.id !== id));
                 toast.success('Organization deleted successfully');
             } catch (error) {
@@ -35,10 +35,14 @@ const OrganizationsListPage = () => {
 
     const fetchOrganizations = async () => {
         try {
-            const response = await privateRequest.get('/organizations');
-            setOrganizations(response.data.data);
+            console.log('Fetching organizations...');
+            const response = await userRequest.get('/organizations');
+            console.log('API Response:', response.data);
+            setOrganizations(response.data.data || []);
+            toast.success('Organizations loaded successfully');
         } catch (error) {
             console.error('Error fetching organizations:', error);
+            toast.error('Failed to load organizations');
         } finally {
             setIsLoading(false);
         }
@@ -80,7 +84,7 @@ const OrganizationsListPage = () => {
                     </div>
 
                     {/* Organizations List */}
-                    <div className="space-y-4">
+                    <div className="space-y-2">
                         {isLoading ? (
                             <div className="flex justify-center p-8">
                                 <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
@@ -91,68 +95,66 @@ const OrganizationsListPage = () => {
                             </div>
                         ) : (
                             filteredOrganizations.map((org) => (
-                                <div key={org.id} className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
-                                    <div className="flex items-start justify-between">
-                                        {/* Organization Info */}
-                                        <div className="flex items-start space-x-4">
-                                            {/* Logo/Avatar */}
-                                            <div className="h-12 w-12 rounded-lg bg-gray-100 flex items-center justify-center">
+                                <div key={org.id} className="bg-blue-50/30 rounded-lg p-4">
+                                    <div className="flex items-center justify-between">
+                                        {/* Organization Name and Logo */}
+                                        <div className="flex items-center space-x-3 w-1/3">
+                                            <div className="h-10 w-10 rounded-full bg-white border border-gray-200 flex items-center justify-center">
                                                 {org.organizationLogo ? (
                                                     <img
                                                         src={org.organizationLogo}
                                                         alt={org.organizationName}
-                                                        className="h-12 w-12 rounded-lg object-cover"
+                                                        className="h-10 w-10 rounded-full object-cover"
                                                     />
                                                 ) : (
-                                                    <Building2 className="h-6 w-6 text-gray-400" />
+                                                    <span className="text-lg font-medium text-gray-600">
+                                                        {org.organizationName[0]}
+                                                    </span>
                                                 )}
                                             </div>
+                                            <div>
+                                                <h3 className="font-medium text-gray-900">
+                                                    {org.organizationName}
+                                                </h3>
+                                                <p className="text-sm text-gray-500">Company Details</p>
+                                            </div>
+                                        </div>
 
-                                            {/* Details */}
-                                            <div className="space-y-3">
-                                                <div>
-                                                    <h3 className="text-lg font-semibold text-gray-900">
-                                                        {org.organizationName}
-                                                    </h3>
-                                                    <div className="mt-1 flex items-center">
-                                                        <MapPin size={16} className="text-gray-400 mr-1" />
-                                                        <span className="text-sm text-gray-600">
-                                                            {org.city}, {org.province}
-                                                        </span>
-                                                    </div>
-                                                </div>
-
-                                                <div className="flex space-x-6">
-                                                    <div className="flex items-center text-sm text-gray-500">
-                                                        <Phone size={16} className="text-gray-400 mr-1" />
-                                                        {org.phoneNumber1}
-                                                    </div>
-                                                    <div className="flex items-center text-sm text-gray-500">
-                                                        <Mail size={16} className="text-gray-400 mr-1" />
-                                                        {org.email}
-                                                    </div>
-                                                </div>
+                                        {/* Stats */}
+                                        <div className="flex space-x-12 w-1/3 justify-center">
+                                            <div className="text-center">
+                                                <p className="text-lg font-semibold text-gray-900">
+                                                    {org.employee?.length || 0}
+                                                </p>
+                                                <p className="text-sm text-gray-500">Employees</p>
+                                            </div>
+                                            <div className="text-center">
+                                                <p className="text-lg font-semibold text-gray-900">
+                                                    {org.office?.length || 0}
+                                                </p>
+                                                <p className="text-sm text-gray-500">Offices</p>
+                                            </div>
+                                            <div className="text-center">
+                                                <p className="text-lg font-semibold text-gray-900">
+                                                    {org.guard?.length || 0}
+                                                </p>
+                                                <p className="text-sm text-gray-500">Guards</p>
                                             </div>
                                         </div>
 
                                         {/* Actions */}
-                                        <div className="flex items-center space-x-2">
-                                            <span className="px-3 py-1 rounded-full text-xs font-medium bg-green-50 text-green-700 border border-green-100">
-                                                Active
-                                            </span>
+                                        <div className="flex items-center space-x-2 w-1/3 justify-end">
                                             <button 
                                                 onClick={() => handleView(org.id)}
-                                                className="p-2 text-gray-400 hover:text-blue-600 transition-colors"
-                                                title="View Details"
+                                                className="px-4 py-1 text-blue-600 bg-blue-50 rounded-full text-sm font-medium"
                                             >
-                                                <Eye size={18} />
+                                                View
                                             </button>
                                             <button 
                                                 onClick={() => handleDelete(org.id)}
-                                                className="p-2 text-gray-400 hover:text-red-600 transition-colors"
-                                                title="Delete Organization"
+                                                className="px-4 py-1 text-red-600 bg-red-50 rounded-full text-sm font-medium"
                                             >
-                                                <Trash2 size={18} />
+                                                Delete
                                             </button>
                                         </div>
                                     </div>
