@@ -50,8 +50,8 @@ const GuardReferences = ({ onNext, onPrevious, initialData = {} }) => {
             schema[`reference_${index}_relationship`] = Yup.string();
             schema[`reference_${index}_currentAddress`] = Yup.string();
             schema[`reference_${index}_permanentAddress`] = Yup.string();
-            schema[`reference_${index}_cnicFront`] = Yup.string().required('CNIC Front image is required');
-            schema[`reference_${index}_cnicBack`] = Yup.string().required('CNIC Back image is required');
+                schema[`reference_${index}_cnicFront`] = Yup.string();
+                schema[`reference_${index}_cnicBack`] = Yup.string();
         });
         return Yup.object(schema);
     };

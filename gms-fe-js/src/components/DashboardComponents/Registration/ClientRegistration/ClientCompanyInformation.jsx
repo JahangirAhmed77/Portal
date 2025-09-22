@@ -27,7 +27,7 @@ const ClientCompanyInformation = ({ onNext, onSave, initialData = {}, currentSte
         state: Yup.string().required('State/Province is required'),
         officialEmail: Yup.string().email('Invalid email').required('Official Email is required'),
         currentAddress: Yup.string().required('Current Address is required'),
-        contractFile: Yup.string().required('Contract file is required')
+        contractFile: Yup.string()
     });
 
     const initialValues = {
@@ -206,7 +206,7 @@ const ClientCompanyInformation = ({ onNext, onSave, initialData = {}, currentSte
                                     Recruitment Date
                                 </label> */}
                                 {/* Renamed the recruitment date to contract date */}
-                                
+
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
                                     Contract Date
                                 </label>

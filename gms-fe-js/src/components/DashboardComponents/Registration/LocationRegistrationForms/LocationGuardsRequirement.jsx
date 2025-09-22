@@ -140,11 +140,8 @@ const LocationGuardsRequirement = ({ onNext, onPrevious, onSave, initialData = {
                             <td className="p-2 w-40">
                               <Field name={`guards.${index}.shiftId`} as="select" className="w-full px-6 py-2 text-sm bg-formBgLightBlue border border-gray-200 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500">
                                 <option value="" disabled>Select</option>
-                                <option value=''>Morning</option>
-                                <option value=''>Evening</option>
-                                <option value=''>Night</option>
                                 {allShifts?.map((shift) => (
-                                  <option key={shift.id} value={shift.id} >{shift.shiftName}</option>
+                                  <option key={shift.id} value={shift.id}>{shift.shiftName}</option>
                                 ))}
 
                               </Field>

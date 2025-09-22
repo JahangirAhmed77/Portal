@@ -59,20 +59,32 @@ const CreateUserForm = () => {
     useEffect(() => {
 
         const getAllRoles = async () => {
-            const res = await userRequest.get("/roles/for-organization");
+            const token = localStorage.getItem('token');
+            const res = await userRequest.get("/roles/organization", {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
             setRoles(res.data.data);
 
         }
 
         const getAllEmployees = async () => {
-            const res = await userRequest.get("/employee/by-organization");
+            const token = localStorage.getItem('token');
+            const res = await userRequest.get("/employee/by-organization", {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
             setEmployees(res.data.data);
         }
-
         const getAllOffices = async () => {
-            //This all offices contain the branch
-            const res = await userRequest.get("/organizations/get-offices")
-
+            const token = localStorage.getItem('token'); // Or get it from your auth context/provider
+            const res = await userRequest.get("/organizations/get-offices", {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
             setOffices(res.data.data);
         }
 
@@ -247,18 +259,11 @@ const CreateUserForm = () => {
                                             } text-gray-700`}
                                     >
                                         <option value="">Select</option>
-                                        <option value=''>Manager</option>
-                                        <option value=''>Supervisor</option>
-                                        <option value=''>Staff</option>
-                                        <option value=''>Client</option>
-                                        <option value=''>User </option>
-
                                         {roles?.map((role) => (
                                             (role.roleName !== 'superAdmin' && role.roleName !== 'organizationAdmin' && role.roleName !== 'client') && (
                                                 <option key={role.id} value={role.id}>
                                                     {role.roleName.charAt(0).toUpperCase() + role.roleName.slice(1)}
                                                 </option>
-
                                             )
                                         ))}
                                     </Field>
